@@ -2,22 +2,17 @@
 
 import argparse
 
-from backend import request_data
+from backend import get_formatted_response
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("line")
-    parser.add_argument("stop_area")
-
+    parser.add_argument("stop_name")
+    parser.add_argument("--simple", action="store_true")
+    parser.add_argument("--compact", action="store_true")
     ns = parser.parse_args()
 
-    data, status, errorMessage = request_data(ns.line, ns.stop_area)
-    if 200 <= status < 300:
-        print(data)
-        # fine
-    if status > 400:
-        print(errorMessage)
+    print(get_formatted_response(ns.stop_name, pretty=not ns.simple, compact=ns.compact))
 
 
 if __name__ == "__main__":
