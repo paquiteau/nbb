@@ -1,0 +1,4 @@
+{"nextDepartures":{"data":[],"statusCode":404,"errorMessage":"NO_REALTIME_SCHEDULES_FOUND"},
+ "crowdsourcingReports":{"congestions":[
+    {"directionId":"stop_area:IDFM:60998","nearTimeReports":{"rating":null}},
+    {"directionId":"stop_area:IDFM:483697","nearTimeReports":{"rating":null}}],"statusCode":200}}
