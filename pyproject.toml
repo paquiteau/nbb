@@ -1,0 +1,38 @@
+[project]
+name = "nbb"
+description = "Get the next in coming buses at a Paris area Station."
+
+version = "0.0.0"
+authors =[
+{name="Pierre-Antoine Comby", email="pierre-antoine.comby@crans.org"}
+]
+
+dependencies = ["requests"]
+
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-cov", "pytest-xdist", "pytest-sugar"]
+dev = ["black", "isort"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[tool.coverage.run]
+omit = ["*tests*"]
+
+[tool.coverage.report]
+precision = 2
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+
+# Formatting using black.
+[tool.black]
+
+[tool.isort]
+profile="black"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = [
+    "--cov=nbb",
+    "--cov-report=term-missing",
+]
