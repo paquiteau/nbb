@@ -38,7 +38,7 @@ def request_data(line, stop_area):
 
 
 def extract_info(nextbus):
-    """Extract information for the next bus"""
+    """Extract information for the next bus."""
     short_name = nextbus["shortName"]
     direction = nextbus["lineDirection"]
     time = int(nextbus["time"])
@@ -66,15 +66,15 @@ def format_next_bus_simple(nextbus, compact=False):
 
 def format_next_bus_pretty(nextbus, compact=False):
     """Pretty format of next bus departure."""
-    short_name, direction, time, next_bus_time = extract_info(nextbus)
+    short_name, direction, nb_t, nb_h = extract_info(nextbus)
 
     bus_pretty_name = "".join([NUM2EMOJI[i] for i in short_name if i.isnumeric()])
     ret_str = ""
     if compact:
         direction = "".join([i for i in direction if i.isnumeric() or i.isupper()])
-        time_str = f"{next_bus_time.hour}:{next_bus_time.minute}"
+        time_str = f"{nb_h.hour}:{nb_h.minute}"
     else:
-        time_str = f"{time:>2} min. ({next_bus_time.hour}:{next_bus_time.minute}) "
+        time_str = f"{nb_t:>2} min. ({nb_h.hour:02}:{nb_h.minute:02}) "
 
     ret_str = " ".join([f"⏰ {time_str}", f"{bus_pretty_name} 🚍[{direction}]"])
     return ret_str
