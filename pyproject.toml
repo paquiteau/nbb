@@ -38,4 +38,5 @@ minversion = "6.0"
 addopts = [
     "--cov=nbb",
     "--cov-report=term-missing",
+    "--cov-report=xml"
 ]
