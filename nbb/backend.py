@@ -76,7 +76,7 @@ def format_next_bus_pretty(nextbus, compact=False):
     else:
         time_str = f"{nb_t:>2} min. ({nb_h.hour:02}:{nb_h.minute:02}) "
 
-    ret_str = " ".join([f"⏰ {time_str}", f"{bus_pretty_name} 🚍[{direction}]"])
+    ret_str = " ".join([f"⏰ {time_str}", f"{bus_pretty_name} 🚍▶ {direction}"])
     return ret_str
 
 
