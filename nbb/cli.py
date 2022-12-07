@@ -1,5 +1,7 @@
-#!/usr/bin/env python3
-
+# /usr/bin/env python3
+"""
+CLI frontend.
+"""
 import argparse
 import os
 
@@ -12,6 +14,7 @@ from nbb.backend import get_formatted_response
 
 
 def parser():
+    """Initialize parser."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default=None)
     parser.add_argument("--simple", action="store_true")
@@ -39,13 +42,13 @@ def _load_conf(filename):
 
 def load_config(config_file=None):
     """Load config file."""
-
     if config_file is None:
         return _load_conf(os.path.join(os.path.dirname(__file__), "nbb_conf.toml"))
     return _load_conf(config_file)
 
 
 def main():
+    """Execute main CLI function."""
     ns = parser()
     if ns.verbose:
         print("loading config")
