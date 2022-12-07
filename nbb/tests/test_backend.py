@@ -35,7 +35,11 @@ def request_mocker(request):
 
 @pytest.mark.parametrize("pretty", [True, False])
 @pytest.mark.parametrize("compact", [True, False])
-@pytest.mark.parametrize("request_mocker", ["success", "fail"], indirect=True)
+@pytest.mark.parametrize(
+    "request_mocker",
+    ["departure_not_found", "line_not_found", "no_realtime_schedules_found", "success"],
+    indirect=True,
+)
 def test_get_formatted_response(request_mocker, pretty, compact):
     """Test get formatted response."""
     print(backend.get_formatted_response("stop_name", pretty, compact))
