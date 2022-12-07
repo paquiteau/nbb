@@ -43,12 +43,17 @@ Developer Installation
 ----------------------
 
 1. clone the repo ::
-     $ git clone git@github.com:paquiteau/nbb/
+
+   $ git clone git@github.com:paquiteau/nbb/
+
 2. create your venv with your favorite tool
 3. Install locally the package with bells and whistles ::
-     $ (venv) pip install -e .[dev,test]
+
+   $ (venv) pip install -e .[dev,test]
+
 4. Run test ::
-     pytest
+
+   pytest
 
 
 
