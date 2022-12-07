@@ -1,0 +1,29 @@
+# This an example configuration file for next bus bot cli
+
+[cli]
+# output formatting option, default are False.
+
+pretty = true
+compact = true
+verbose = false
+
+[stops]
+# #ach stop shoud contains a line and a stop area of type "Zone de correspondance"
+#
+# Line references:
+# https://data.iledefrance-mobilites.fr/explore/dataset/referentiel-des-lignes/table/
+# Zone de correspondance reference:
+# https://data.iledefrance-mobilites.fr/explore/dataset/zones-de-correspondance/custom/?disjunctive.zdctype
+#
+# C01561 is the bus line "9" on the Plateau de Saclay.
+
+# The first stop defined is the default one.
+
+"Mare du Vivier" = ["C01561", 420704]
+"Raoul Dautry" = ["C01561", 63236]
+
+[stop.aliases]
+#
+"Mare du Vivier" = ["CEA Porte Sud", "Neurospin", "nsp"]
+
+"Raoul Dautry" = ["CEA Porte Est"]
