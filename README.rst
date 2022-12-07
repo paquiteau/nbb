@@ -51,9 +51,9 @@ Developer Installation
 
    $ (venv) pip install -e .[dev,test]
 
-4. Run test ::
+4. Run tests ::
 
-   pytest
+   $ pytest
 
 
 
