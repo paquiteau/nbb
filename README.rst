@@ -9,7 +9,8 @@ It works only for the IDFM/RATP Network, relying on the api ``lines/v4``. For no
 
 .. warning::
 
-   This is a toy project for learning new stuff in python (Python packaging, TDD, CLI tools, etc ...).
+   This is a personal toy project for learning new stuff in python (Python packaging, TDD, CLI tools, etc ...).
+   It *might* feel overengineered, if so, it's on purpose.
 
    I am not responsible if you arrive late at your work.
    For serious travel planning, use your favorite app.
@@ -34,6 +35,7 @@ Pip Installation
 
 Coming soon:tm:
 ::
+
    $ pip install next-bus-bot
 
 
