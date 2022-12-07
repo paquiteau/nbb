@@ -29,7 +29,7 @@ def _load_conf(filename):
         try:
             conf = toml.load(f)
         except FileNotFoundError:
-            print(f"{ns.config} specified but not found.")
+            print(f"{filename} specified but not found.")
             exit(1)
         except toml.TOMLDecodeError as e:
             print(e)
@@ -37,18 +37,19 @@ def _load_conf(filename):
     return conf
 
 
-def load_config(ns):
+def load_config(config_file=None):
     """Load config file."""
-    print("loading config ... ")
 
-    if ns.config is None:
+    if config_file is None:
         return _load_conf(os.path.join(os.path.dirname(__file__), "nbb_conf.toml"))
-    return _load_conf(ns.config)
+    return _load_conf(config_file)
 
 
 def main():
     ns = parser()
-    conf = load_config(ns)
+    if ns.verbose:
+        print("loading config")
+    conf = load_config(ns.config)
 
     print(
         get_formatted_response(ns.stop_name, pretty=not ns.simple, compact=ns.compact)
