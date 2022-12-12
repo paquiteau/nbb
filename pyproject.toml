@@ -2,7 +2,7 @@
 name = "nbb"
 description = "Get the next in coming buses at a Paris area Station."
 
-version = "0.0.0"
+version = "1.0.0"
 authors =[
 {name="Pierre-Antoine Comby", email="pierre-antoine.comby@crans.org"}
 ]
