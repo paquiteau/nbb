@@ -107,10 +107,41 @@ def string_norm(string):
     """Normalize string."""
     return unicodedata.normalize("NFKD", string).lower()
 
+
+def normalize(config):
+    """Normalize all the aliases."""
+    alias_table = {}
+    for stop_name, aliases in config["stop"]["aliases"].items():
+        for alias_name in aliases:
+            alias_table[string_norm(alias_name)] = stop_name
+
+        alias_table[string_norm(stop_name)] = stop_name
+    return alias_table
+
+
+def get_stop_infos(config, input_name):
+    """Get the line code and stop area code."""
+    alias_table = normalize(config)
+
+    if input_name is not None:
+        try:
+            stop_name = alias_table[input_name]
+        except KeyError:
+            _exit_err_msg(
+                "Provided stop name could not be map to a registered stop name."
+            )
+
+    else:
+        stop_name = list(config["stop"]["places"])[0]
+    line_code, stop_code = config["stop"]["places"][stop_name]
+    filters = config["stop"]["direction_filter"].get(stop_name, [])
+    return stop_name, line_code, stop_code, filters
+
+
+def get_formatted_response(line_name, area_code, filters, pretty=False, compact=False):
     """Return the formatted waiting time for every bus."""
     # get stop_code matching stop_name as close as possible
     # get line on the stop area.
-    line_name, area_code = get_codes(stop_name)
     data, status, error_message = request_data(line_name, area_code)
 
     if status > 400:
