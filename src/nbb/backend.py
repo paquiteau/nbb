@@ -91,9 +91,9 @@ def format_next_bus_pretty(nextbus, compact=False):
     return ret_str
 
 
-def format_data(data, stop_area, compact=False, pretty=False):
+def format_data(data, compact=False, pretty=False):
     """Format the reply string in human readable format."""
-    ret_str = f"Next Buses at {stop_area}: \n"
+    ret_str = ""
 
     if pretty:
         format_func = format_next_bus_pretty
