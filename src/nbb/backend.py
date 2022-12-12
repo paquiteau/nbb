@@ -45,7 +45,6 @@ def request_data(line, stop_area):
     data = response["nextDepartures"].get("data")
     statusCode = response["nextDepartures"].get("statusCode")
     errorMessage = response["nextDepartures"].get("errorMessage")
-
     return data, statusCode, errorMessage
 
 
@@ -110,9 +109,6 @@ def format_data(data, stop_area, compact=False, pretty=False):
     return ret_str
 
 
-def get_codes(stop_name):
-    """Find the line and area code matching stop_name."""
-    return "C01561", 420704
 def format_error(error_code, pretty=False):
     """Format error"""
     ret_str = ""
