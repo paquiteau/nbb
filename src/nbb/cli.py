@@ -10,7 +10,7 @@ try:
 except ImportError:
     import tomli as toml
 
-from nbb.backend import get_formatted_response
+from nbb.backend import get_formatted_response, get_stop_infos
 
 
 def parser():
@@ -22,12 +22,16 @@ def parser():
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("stop_name", nargs="*", default=None)
     ns = parser.parse_args()
+    if len(ns.stop_name) > 0:
+        ns.stop_name = " ".join(ns.stop_name)
+    else:
+        ns.stop_name = None
     if ns.verbose:
         print("This is nbb cli\nVerbose = ON")
     return ns
 
 
-def _load_conf(filename):
+def _load_toml(filename):
     with open(filename, "rb") as f:
         try:
             conf = toml.load(f)
@@ -40,11 +44,13 @@ def _load_conf(filename):
     return conf
 
 
-def load_config(config_file=None):
+def get_config(config_file=None):
     """Load config file."""
     if config_file is None:
-        return _load_conf(os.path.join(os.path.dirname(__file__), "nbb_conf.toml"))
-    return _load_conf(config_file)
+        config_file = os.path.join(os.path.dirname(__file__), "nbb_conf.toml")
+
+    conf = _load_toml(config_file)
+    return conf
 
 
 def main():
@@ -52,10 +58,16 @@ def main():
     ns = parser()
     if ns.verbose:
         print("loading config")
-    conf = load_config(ns.config)
 
+    conf = get_config(ns.config)
+    # Get the default stop as the first one registered:
+    stop_name, line_code, stop_code, filters = get_stop_infos(conf, ns.stop_name)
+
+    print(f"Next buses at {stop_name}")
     print(
-        get_formatted_response(ns.stop_name, pretty=not ns.simple, compact=ns.compact)
+        get_formatted_response(
+            line_code, stop_code, filters, pretty=not ns.simple, compact=ns.compact
+        )
     )
 
 
