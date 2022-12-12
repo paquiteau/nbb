@@ -25,6 +25,17 @@ NUM2EMOJI = {
     "10": "🔟",
 }
 
+ERROR_CODE_PRETTY = {
+    "NO_REALTIME_SCHEDULES_FOUND": "No realtime scheldules available.",
+    "LINE_NOT_FOUND": "Line not found",
+    "DEPARTURE_NOT_FOUND": "Departure not found",
+}
+
+
+def _exit_err_msg(msg, exit_code=1):
+    print(msg)
+    exit(exit_code)
+
 
 def request_data(line, stop_area):
     """Get the data from IDFM API."""
@@ -102,6 +113,16 @@ def format_data(data, stop_area, compact=False, pretty=False):
 def get_codes(stop_name):
     """Find the line and area code matching stop_name."""
     return "C01561", 420704
+def format_error(error_code, pretty=False):
+    """Format error"""
+    ret_str = ""
+    if pretty:
+        ret_str += "❌ "
+    else:
+        ret_str += "ERROR: "
+    ret_str += ERROR_CODE_PRETTY[error_code]
+    return ret_str
+
 
 def string_norm(string):
     """Normalize string."""
@@ -145,6 +166,4 @@ def get_formatted_response(line_name, area_code, filters, pretty=False, compact=
     data, status, error_message = request_data(line_name, area_code)
 
     if status > 400:
-        return error_message
-
     return format_data(data, stop_name, compact=compact, pretty=pretty)
