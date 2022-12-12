@@ -7,8 +7,8 @@ pretty = true
 compact = true
 verbose = false
 
-[stops]
-# #ach stop shoud contains a line and a stop area of type "Zone de correspondance"
+[stop.places]
+# each stop shoud contains a line code and a "Zone de correspondance" code
 #
 # Line references:
 # https://data.iledefrance-mobilites.fr/explore/dataset/referentiel-des-lignes/table/
@@ -16,14 +16,28 @@ verbose = false
 # https://data.iledefrance-mobilites.fr/explore/dataset/zones-de-correspondance/custom/?disjunctive.zdctype
 #
 # C01561 is the bus line "9" on the Plateau de Saclay.
-
+# C01567 is the bus line "Express 91-06" on the plateau de Saclay.
+#
+# The name of the step as a key does not matter,
+# it should only be consistent between the stops, stops.aliases and stop.directions sections.
+#
 # The first stop defined is the default one.
-
+#
 "Mare du Vivier" = ["C01561", 420704]
+"Moulon" = ["C01561", 63086]
 "Raoul Dautry" = ["C01561", 63236]
+"Place Marguerite Perey" = ["C01567", 63144]
 
 [stop.aliases]
 #
 "Mare du Vivier" = ["CEA Porte Sud", "Neurospin", "nsp"]
-
+"Moulon" = ["ENS Paris-Saclay"]
 "Raoul Dautry" = ["CEA Porte Est"]
+"Place Marguerite Perey" = ["Inria"]
+
+[stop.direction_filter]
+
+# For each stop you can filter direction, either by specifying a IDFM stop_area code, or the commercial name.
+
+"Mare du Vivier" = ["Gare du Guichet", 60998]      # Only keep the gare du guichet  and Centre commercial ulis2
+#"Mare du Vivier" = ["Gare du Guichet", "60998", "!Christ de Saclay"]  # Filter Christ de Saclay direction out
