@@ -1,6 +1,7 @@
 """Backend to contact the IDFM api."""
 
 import datetime
+import unicodedata
 
 import requests
 
@@ -102,8 +103,10 @@ def get_codes(stop_name):
     """Find the line and area code matching stop_name."""
     return "C01561", 420704
 
+def string_norm(string):
+    """Normalize string."""
+    return unicodedata.normalize("NFKD", string).lower()
 
-def get_formatted_response(stop_name, pretty=False, compact=False):
     """Return the formatted waiting time for every bus."""
     # get stop_code matching stop_name as close as possible
     # get line on the stop area.
