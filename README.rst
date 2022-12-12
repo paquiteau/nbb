@@ -33,7 +33,6 @@ Installation
 Pip Installation
 ----------------
 
-Coming soon:tm:
 ::
 
    $ pip install next-bus-bot

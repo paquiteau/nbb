@@ -42,4 +42,12 @@ def request_mocker(request):
 )
 def test_get_formatted_response(request_mocker, pretty, compact):
     """Test get formatted response."""
-    print(backend.get_formatted_response("stop_name", pretty, compact))
+    print(
+        backend.get_formatted_response(
+            "mock_line",
+            "mock_stop",
+            ["Christ de Saclay", "!Gare du Guichet"],
+            pretty,
+            compact,
+        )
+    )
