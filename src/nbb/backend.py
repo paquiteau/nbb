@@ -162,4 +162,20 @@ def get_formatted_response(line_name, area_code, filters, pretty=False, compact=
     data, status, error_message = request_data(line_name, area_code)
 
     if status > 400:
-    return format_data(data, stop_name, compact=compact, pretty=pretty)
+        return format_error(error_message, pretty=pretty)
+    # TODO: Move to Pattern Matching.
+    if len(filters) > 0:
+        new_data = []
+        for f in filters:
+            f = str(f)
+            if exclude_filter := "!" in f[0]:
+                f = f[1:]
+            for schedule in data:
+                match = (
+                    f.isnumeric()
+                    and schedule["destination"]["stopAreaId"].split(":")[-1] == f
+                ) or (string_norm(f) == string_norm(schedule["lineDirection"]))
+                if exclude_filter ^ match:
+                    new_data.append(schedule)
+        data = new_data
+    return format_data(data, compact=compact, pretty=pretty)
