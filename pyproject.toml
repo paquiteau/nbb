@@ -2,12 +2,15 @@
 name = "next-bus-bot"
 description = "Get the next in coming buses at a Paris area Station."
 
-version = "1.0.0"
+version = "1.0.3"
 authors =[
 {name="Pierre-Antoine Comby", email="pierre-antoine.comby@crans.org"}
 ]
 
-dependencies = ["requests"]
+dependencies = [
+  "requests",
+  "tomli; python_version <= '3.10'",
+]
 
 readme = "README.rst"
 
@@ -40,6 +43,9 @@ dev = ["black", "isort"]
 [build-system]
 requires = ["setuptools", "wheel"]
 
+[tool.setuptools]
+
+package-data = {"nbb" = ["*.toml"]}
 
 [tool.coverage.run]
 omit = ["*tests*"]
