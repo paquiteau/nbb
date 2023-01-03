@@ -99,7 +99,8 @@ def format_data(data, compact=False, pretty=False):
         format_func = format_next_bus_pretty
     else:
         format_func = format_next_bus_simple
-    formatted_bus = [format_func(nextbus, compact=compact) for nextbus in data]
+    data_sorted = sorted(data, key=lambda x: int(x["time"]))
+    formatted_bus = [format_func(nextbus, compact=compact) for nextbus in data_sorted]
 
     if compact:
         ret_str += " | ".join(formatted_bus)
