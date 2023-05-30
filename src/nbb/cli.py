@@ -4,19 +4,21 @@ CLI frontend.
 """
 import argparse
 import os
+from pprint import pprint
 
 try:
     import tomllib as toml
 except ImportError:
     import tomli as toml
 
-from nbb.backend import get_formatted_response, get_stop_infos
+from nbb.backend import get_formatted_response, get_stop_infos, request_data
 
 
 def parser():
     """Initialize parser."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default=None)
+    parser.add_argument("--raw", action="store_true")
     parser.add_argument("--simple", action="store_true")
     parser.add_argument("--compact", action="store_true")
     parser.add_argument("--verbose", action="store_true")
@@ -63,12 +65,16 @@ def main():
     # Get the default stop as the first one registered:
     stop_name, line_code, stop_code, filters = get_stop_infos(conf, ns.stop_name)
 
-    print(f"Next buses at {stop_name}")
-    print(
-        get_formatted_response(
-            line_code, stop_code, filters, pretty=not ns.simple, compact=ns.compact
+    if ns.raw:
+        data, status, error_message = request_data(line_code, stop_code)
+        pprint(data)
+    else:
+        print(f"Next buses at {stop_name}")
+        print(
+            get_formatted_response(
+                line_code, stop_code, filters, pretty=not ns.simple, compact=ns.compact
+            )
         )
-    )
 
 
 if __name__ == "__main__":
