@@ -8,10 +8,6 @@ compact = true
 verbose = false
 
 [stop.places]
-# each stop shoud contains a line code and a "Zone de correspondance" code
-#
-# Line references:
-# https://data.iledefrance-mobilites.fr/explore/dataset/referentiel-des-lignes/table/
 # Zone de correspondance reference:
 # https://data.iledefrance-mobilites.fr/explore/dataset/zones-de-correspondance/custom/?disjunctive.zdctype
 #
@@ -23,15 +19,21 @@ verbose = false
 #
 # The first stop defined is the default one.
 #
-"Mare du Vivier" = ["C01561", 420704]
-"Moulon" = ["C01561", 63086]
-"Raoul Dautry" = ["C01561", 63236]
-"Place Marguerite Perey" = ["C01567", 63144]
+"Mare du Vivier" = 420704
+"Moulon" =  63086
+"Raoul Dautry" = 63236
+"Place Marguerite Perey" = 63144
+
+[stop.lines]
+# Only used for the V1 API calls.
+
+"Mare du Vivier" = ["C01561", "C01567"]
+"Moulon" = ["C01561", "C01567"]
 
 [stop.aliases]
 #
-"Mare du Vivier" = ["CEA Porte Sud", "Neurospin", "nsp"]
-"Moulon" = ["ENS Paris-Saclay"]
+"Mare du Vivier" = ["CEA Porte Sud", "Neurospin", "nsp", "mdv"]
+"Moulon" = ["ens"]
 "Raoul Dautry" = ["CEA Porte Est"]
 "Place Marguerite Perey" = ["Inria"]
 

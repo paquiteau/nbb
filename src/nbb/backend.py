@@ -11,6 +11,9 @@ BASE_URL = "https://api-iv.iledefrance-mobilites.fr/lines/v2/"
 # stop_area:IDFM:420704
 
 
+# curl -X 'GET'   'https://prim.iledefrance-mobilites.fr/marketplace/stop-monitoring?MonitoringRef=STIF%3AStopArea%3ASP%3A420704%3A'   -H 'accept: application/json'  -H  'apikey: HjdLNrITbnGeVPpXSoPrwA0n3gQ6K02W' | jq
+
+
 NUM2EMOJI = {
     "0": "0️⃣",
     "1": "1️⃣",
@@ -58,56 +61,6 @@ def extract_info(nextbus):
     next_bus_time = now + datetime.timedelta(minutes=time)
 
     return short_name, direction, time, next_bus_time
-
-
-def format_next_bus_simple(nextbus, compact=False):
-    """Format a next bus departure."""
-    short_name, direction, time, next_bus_time = extract_info(nextbus)
-
-    ret_str = ""
-    if compact:
-        direction = "".join([i for i in direction if i.isnumeric() or i.isupper()])
-        time_str = f"{next_bus_time.hour}:{next_bus_time.minute}"
-    else:
-        time_str = f"{time} min. ({next_bus_time.hour}:{next_bus_time.minute})"
-
-    ret_str = " ".join([time_str, short_name, f"[{direction}]"])
-    return ret_str
-
-
-def format_next_bus_pretty(nextbus, compact=False):
-    """Pretty format of next bus departure."""
-    short_name, direction, nb_t, nb_h = extract_info(nextbus)
-
-    bus_pretty_name = "".join([NUM2EMOJI[i] for i in short_name if i.isnumeric()])
-    ret_str = ""
-    if compact:
-        direction = "".join([i for i in direction if i.isnumeric() or i.isupper()])
-        time_str = f"{nb_h.hour}:{nb_h.minute}"
-    else:
-        time_str = f"{nb_t:>2} min. ({nb_h.hour:02}:{nb_h.minute:02}) "
-
-    ret_str = " ".join([f"⏰ {time_str}", f"{bus_pretty_name} 🚍▶ {direction}"])
-    return ret_str
-
-
-def format_data(data, compact=False, pretty=False):
-    """Format the reply string in human readable format."""
-    ret_str = ""
-
-    if pretty:
-        format_func = format_next_bus_pretty
-    else:
-        format_func = format_next_bus_simple
-    data_sorted = sorted(data, key=lambda x: int(x["time"]))
-    formatted_bus = [format_func(nextbus, compact=compact) for nextbus in data_sorted]
-
-    if compact:
-        ret_str += " | ".join(formatted_bus)
-    else:
-        ret_str = "- " + "\n- ".join(formatted_bus)
-
-    return ret_str
 
 
 def format_error(error_code, pretty=False):
