@@ -50,9 +50,8 @@ Developer Installation
 
 TODO
 ----
- - automatic aliasing of stops (based on initials )
+ - automatic aliasing of stops (based on initials)
  - support for direction filtering
- - publish on PyPi
  - Add support for a bot front-end (slack, discord, IRC, etc).
  - Extend the useful bus stops.
 
@@ -67,4 +66,37 @@ nbb can be configured via its command line argument, or via a config file `nbb_c
  4. `nbb --config <file>`
 
 
-An example (and default) config file is available in `nbb/nbb_conf.toml`.
+An example (and default) config file is available in `nbb/nbb_conf`, and a example config is:
+
+.. code-block:: toml
+
+    [cli]
+    # Default parameters for the CLI
+    pretty = true     # Emoji in the terminal
+    compact = false    # More condensed output
+    verbose = false    # More verbose output, only for debugging.
+
+    [stop.places]
+    # List of bus stops, with their name and their ID
+    # You can find the ID of a stop by looking at the URL of the stop on the IDFM website
+    # https://data.iledefrance-mobilites.fr/explore/dataset/zones-de-correspondance/custom/?disjunctive.zdctype
+
+    # The name of the step as a key does not matter,
+    # it should only be consistent between the stops, stops.aliases and stop.directions sections.
+    #
+    # The first stop defined is the default one.
+
+    [stop.aliases]
+    # Aliases for the stops defined in stop.places
+    "Mare du Vivier" = ["CEA Porte Sud", "Neurospin", "nsp", "mdv"]
+    "Moulon" = ["ens"]
+    "Raoul Dautry" = ["CEA Porte Est"]
+    "Place Marguerite Perey" = ["Inria"]
+
+
+    [stop.direction_filter]
+    # Direction filter for the stops defined in stop.places.
+
+    # For each stop you can filter the direction
+    "Mare du Vivier" = ["Gare du Guichet", "Centre Commercial Ulis 2"]      # Only keep the buses that have either 'gare du guichet'  or  'Centre commercial ulis2' as destination.
+    "Moulon" = ["Gare du Guichet", "Centre Commercial Ulis 2"]      # Only keep the gare du guichet  and Centre commercial ulis2
