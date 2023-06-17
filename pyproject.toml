@@ -2,7 +2,7 @@
 name = "next-bus-bot"
 description = "Get the next in coming buses at a Paris area Station."
 
-version = "1.0.3"
+dynamic = ["version"]
 authors =[
 {name="Pierre-Antoine Comby", email="pierre-antoine.comby@crans.org"}
 ]
