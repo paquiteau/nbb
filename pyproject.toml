@@ -1,5 +1,5 @@
 [project]
-name = "next-bus-bot"
+name = "nbb"
 description = "Get the next in coming buses at a Paris area Station."
 
 dynamic = ["version"]
@@ -41,12 +41,21 @@ nbb = "nbb.cli:main"
 test = ["pytest", "pytest-cov", "pytest-xdist", "pytest-sugar"]
 dev = ["black", "isort"]
 
+
 [build-system]
-requires = ["setuptools", "wheel"]
+# These are the assumed default build requirements from pip:
+# https://pip.pypa.io/en/stable/reference/pip/#pep-517-and-518-support
+requires = ["setuptools>=43.0.0", "setuptools_scm[toml]>=6.2", "wheel"]
+build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
+[tool.setuptools.packages.find]
+where=["src"]
 
-package-data = {"nbb" = ["*.toml"]}
+
+[tool.setuptools_scm]
+write_to = "src/nbb/_version.py"
+version_scheme = "python-simplified-semver"
+local_scheme="no-local-version"
 
 [tool.coverage.run]
 omit = ["*tests*"]
