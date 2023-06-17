@@ -3,17 +3,10 @@
 CLI frontend.
 """
 import argparse
-import unicodedata
-import os
 import datetime
-from pprint import pprint
-
-try:
-    import tomllib as toml
-except ImportError:
-    import tomli as toml
 
 from nbb.api_call import get_next_passes
+from nbb.config import get_config, get_stop_infos
 
 
 def parser():
@@ -24,7 +17,7 @@ def parser():
     parser.add_argument("--simple", action="store_true")
     parser.add_argument("--compact", action="store_true")
     parser.add_argument("--verbose", action="store_true")
-    parser.add_argument("stop_name", nargs="*", default=None)
+    parser.add_argument("stop_name", default=None)
     ns = parser.parse_args()
     if len(ns.stop_name) > 0:
         ns.stop_name = " ".join(ns.stop_name)
@@ -33,68 +26,6 @@ def parser():
     if ns.verbose:
         print("This is nbb cli\nVerbose = ON")
     return ns
-
-
-def _load_toml(filename):
-    with open(filename, "rb") as f:
-        try:
-            conf = toml.load(f)
-        except FileNotFoundError:
-            print(f"{filename} specified but not found.")
-            exit(1)
-        except toml.TOMLDecodeError as e:
-            print(e)
-            exit(1)
-    return conf
-
-
-def get_config(config_file=None):
-    """Load config file."""
-    if config_file is None:
-        config_file = os.path.join(os.path.dirname(__file__), "nbb_conf.toml")
-
-    conf = _load_toml(config_file)
-    return conf
-
-
-def _exit_err_msg(msg, exit_code=1):
-    print(msg)
-    exit(exit_code)
-
-
-def string_norm(string):
-    """Normalize string."""
-    return unicodedata.normalize("NFKD", string).lower()
-
-
-def normalize(config):
-    """Normalize all the aliases."""
-    alias_table = {}
-    for stop_name, aliases in config["stop"]["aliases"].items():
-        for alias_name in aliases:
-            alias_table[string_norm(alias_name)] = stop_name
-
-        alias_table[string_norm(stop_name)] = stop_name
-    return alias_table
-
-
-def get_stop_infos(config, input_name):
-    """Get the line code and stop area code."""
-    alias_table = normalize(config)
-
-    if input_name is not None:
-        try:
-            stop_name = alias_table[input_name]
-        except KeyError:
-            _exit_err_msg(
-                "Provided stop name could not be map to a registered stop name."
-            )
-
-    else:
-        stop_name = list(config["stop"]["places"])[0]
-    stop_code = config["stop"]["places"][stop_name]
-    filters = config["stop"]["direction_filter"].get(stop_name, [])
-    return stop_name, stop_code, filters
 
 
 def main():
