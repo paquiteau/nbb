@@ -17,12 +17,8 @@ def parser():
     parser.add_argument("--simple", action="store_true")
     parser.add_argument("--compact", action="store_true")
     parser.add_argument("--verbose", action="store_true")
-    parser.add_argument("stop_name", default=None)
+    parser.add_argument("stop_name", nargs="?", default=None)
     ns = parser.parse_args()
-    if len(ns.stop_name) > 0:
-        ns.stop_name = " ".join(ns.stop_name)
-    else:
-        ns.stop_name = None
     if ns.verbose:
         print("This is nbb cli\nVerbose = ON")
     return ns

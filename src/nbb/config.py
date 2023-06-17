@@ -18,7 +18,7 @@ def find_config(input_cli):
     4. /etc/nbb/nbb_conf.toml
     5. default config file in the same directory as this file
     """
-    if input_cli.config is not None:
+    if input_cli is not None:
         config_file = input_cli
     elif "NBB_CONF" in os.environ:
         config_file = os.environ["NBB_CONF"]
