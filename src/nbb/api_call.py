@@ -1,11 +1,12 @@
 import requests
-import json
-import datetime
 
 from nbb.models import NextPass
 
 
-# curl -X 'GET'   'https://prim.iledefrance-mobilites.fr/marketplace/stop-monitoring?MonitoringRef=STIF%3AStopArea%3ASP%3A420704%3A'   -H 'accept: application/json'  -H  'apikey: HjdLNrITbnGeVPpXSoPrwA0n3gQ6K02W' | jq
+# curl -X 'GET'
+# 'https://prim.iledefrance-mobilites.fr/marketplace/stop-monitoring?MonitoringRef=STIF%3AStopArea%3ASP%3A420704%3A'
+# -H 'accept: application/json'
+# -H  'apikey: HjdLNrITbnGeVPpXSoPrwA0n3gQ6K02W' | jq
 
 BASE_URL = "https://prim.iledefrance-mobilites.fr/marketplace/"
 DEFAULT_API_KEY = "HjdLNrITbnGeVPpXSoPrwA0n3gQ6K02W"

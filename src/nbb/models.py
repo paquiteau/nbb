@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import time
 from datetime import datetime, timedelta
 
 # TODO use ratp dataset

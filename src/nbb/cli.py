@@ -50,7 +50,8 @@ def main():
                 n.is_valid = False
 
     print(
-        f"Next buses at {stop_name} planned {datetime.datetime.now().astimezone().strftime('%H:%M')}"
+        f"Next buses at {stop_name} planned at "
+        f"{datetime.datetime.now().astimezone().strftime('%H:%M')}"
     )
     ret_string = "\n".join(
         n.as_str(ns.compact, pretty=not ns.simple) for n in next_passes if n.is_valid

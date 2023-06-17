@@ -1,7 +1,6 @@
 """Handles API calls to IDFM servers."""
 
 
-import requests
 from nbb.models import NextPass
 
 BASE_URLv1 = ""
