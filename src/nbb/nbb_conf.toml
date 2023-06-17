@@ -24,12 +24,6 @@ verbose = false
 "Raoul Dautry" = 63236
 "Place Marguerite Perey" = 63144
 
-[stop.lines]
-# Only used for the V1 API calls.
-
-"Mare du Vivier" = ["C01561", "C01567"]
-"Moulon" = ["C01561", "C01567"]
-
 [stop.aliases]
 #
 "Mare du Vivier" = ["CEA Porte Sud", "Neurospin", "nsp", "mdv"]
@@ -41,5 +35,6 @@ verbose = false
 
 # For each stop you can filter direction, either by specifying a IDFM stop_area code, or the commercial name.
 
-"Mare du Vivier" = ["Gare du Guichet", 60998]      # Only keep the gare du guichet  and Centre commercial ulis2
+"Mare du Vivier" = ["Gare du Guichet", "Centre Commercial Ulis 2"]      # Only keep the gare du guichet  and Centre commercial ulis2
+"Moulon" = ["Gare du Guichet", "Centre Commercial Ulis 2"]      # Only keep the gare du guichet  and Centre commercial ulis2
 #"Mare du Vivier" = ["Gare du Guichet", "60998", "!Christ de Saclay"]  # Filter Christ de Saclay direction out

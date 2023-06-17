@@ -6,17 +6,17 @@ from datetime import datetime, timedelta
 KNOWN_LINES = {"C01561": "9", "C01567": "91.06"}
 
 NUM2EMOJI = {
-    "0": "0️⃣",
-    "1": "1️⃣",
-    "2": "2️⃣",
-    "3": "3️⃣",
-    "4": "4️⃣",
-    "5": "5️⃣",
-    "6": "6️⃣",
-    "7": "7️⃣",
-    "8": "8️⃣",
-    "9": "9️⃣",
-    "10": "🔟",
+    "0": "0️⃣ ",
+    "1": "1️⃣ ",
+    "2": "2️⃣ ",
+    "3": "3️⃣ ",
+    "4": "4️⃣ ",
+    "5": "5️⃣ ",
+    "6": "6️⃣ ",
+    "7": "7️⃣ ",
+    "8": "8️⃣ ",
+    "9": "9️⃣ ",
+    "10": "🔟 ",
 }
 
 
@@ -48,6 +48,7 @@ class NextPass:
     """ID of the stop area."""
     line_id: int
     """ID of the line."""
+    is_valid: bool = True
 
     @classmethod
     def from_v1(cls, data):
@@ -67,7 +68,7 @@ class NextPass:
         line_name = KNOWN_LINES.get(line_id, "Unknown")
         return cls(
             destination=journey["DestinationName"][0]["value"],
-            time=datetime.fromisoformat(call["ExpectedArrivalTime"]),
+            time=datetime.fromisoformat(call["ExpectedArrivalTime"]).astimezone(),
             arrival_status=call["ArrivalStatus"],
             stop_area_name=stop_area_name,
             stop_area_id=stop_area_id,
@@ -88,7 +89,7 @@ class NextPass:
             destination = "".join(
                 [i for i in self.destination if i.isnumeric() or i.isupper()]
             )
-            time_str = self.time.strftime("%H:%M")
+            time_str = self.time.astimezone().strftime("%H:%M")
         else:
             time_str = (
                 f"{self.delta_time.seconds // 60:>2} ({self.time.strftime('%H:%M')})"
@@ -97,7 +98,7 @@ class NextPass:
 
         if pretty:
             bus_pretty_name = "".join([NUM2EMOJI.get(i, "") for i in self.line_name])
-            return f"⏰ {time_str} {bus_pretty_name} 🚍▶ {destination}"
+            return f"⏰ {time_str} {bus_pretty_name: <10} 🚍▶ {destination}"
 
         return f"{time_str} {self.line_name} [{destination}]"
 
