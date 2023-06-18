@@ -1,5 +1,5 @@
 [project]
-name = "nbb"
+name = "next-bus-bot"
 description = "Get the next in coming buses at a Paris area Station."
 
 dynamic = ["version"]
