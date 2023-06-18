@@ -103,3 +103,31 @@ class NextPass:
 
     def __le__(self, other):
         return self.time <= other.time
+
+
+def get_message(conf, stop_name, simple=False, compact=False):
+    """Returns a message from a list of NextPass objects."""
+
+    stop_name, stop_code, filters = get_stop_infos(stop_name)
+    next_passes = get_next_passes(conf, stop_name)
+    if not next_passes:
+        return "No bus found"
+
+    # Remove past buses
+    for i, n in enumerate(next_passes):
+        if n.time < datetime.datetime.now().astimezone():
+            n.is_valid = False
+    # Filter by direction
+    if filters:
+        for i, n in enumerate(next_passes):
+            if n.destination not in filters:
+                n.is_valid = False
+
+    message = (
+        f"Next buses at {stop_name} planned at "
+        f"{datetime.datetime.now().astimezone().strftime('%H:%M')}"
+    )
+    message += "\n".join(
+        n.as_str(compact, pretty=not simple) for n in next_passes if n.is_valid
+    )
+    return message

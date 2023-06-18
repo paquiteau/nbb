@@ -8,6 +8,8 @@ import datetime
 from nbb.api_call import get_next_passes
 from nbb.config import get_config, get_stop_infos
 
+from nbb.models import get_message
+
 
 def parser():
     """Initialize parser."""
@@ -32,27 +34,7 @@ def main():
 
     conf = get_config(ns.config)
     # Get the default stop as the first one registered:
-    stop_name, stop_code, filters = get_stop_infos(conf, ns.stop_name)
-
-    next_passes = get_next_passes(stop_code)
-    # Remove past buses
-    for i, n in enumerate(next_passes):
-        if n.time < datetime.datetime.now().astimezone():
-            n.is_valid = False
-    # Filter by direction
-    if direction_filter := conf["stop"]["direction_filter"].get(stop_name, None):
-        for i, n in enumerate(next_passes):
-            if n.destination not in direction_filter:
-                n.is_valid = False
-
-    print(
-        f"Next buses at {stop_name} planned at "
-        f"{datetime.datetime.now().astimezone().strftime('%H:%M')}"
-    )
-    ret_string = "\n".join(
-        n.as_str(ns.compact, pretty=not ns.simple) for n in next_passes if n.is_valid
-    )
-    print(ret_string)
+    print(get_message(conf, ns.stop_name, ns.simple, ns.compact))
 
 
 if __name__ == "__main__":
