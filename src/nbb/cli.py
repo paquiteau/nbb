@@ -3,10 +3,8 @@
 CLI frontend.
 """
 import argparse
-import datetime
 
-from nbb.api_call import get_next_passes
-from nbb.config import get_config, get_stop_infos
+from nbb.config import get_config
 
 from nbb.models import get_message
 

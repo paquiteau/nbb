@@ -94,7 +94,10 @@ class NextPass:
             )
             time_str = self.time.astimezone().strftime("%H:%M")
         else:
-            time_str = f"{self.delta_time.seconds // 60:>2}min. ({self.time.strftime('%H:%M')})"
+            time_str = (
+                f"{self.delta_time.seconds // 60:>2}min."
+                "({self.time.strftime('%H:%M')})"
+            )
             destination = self.destination
 
         if pretty:
