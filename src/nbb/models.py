@@ -64,7 +64,7 @@ class NextPass:
         # TODO Save the mapping stop_area_id -> stop_area_name
         # Or dowload the full dataset from IDFM.
         line_id = _get_value_id(journey, "LineRef")[-1]
-        line_name = KNOWN_LINES.get(line_id, "Unknown")
+        line_name = KNOWN_LINES.get(line_id, line_id)
         return cls(
             destination=journey["DestinationName"][0]["value"],
             time=datetime.fromisoformat(call["ExpectedArrivalTime"]).astimezone(),
