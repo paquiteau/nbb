@@ -1,5 +1,9 @@
+"""Core models for the nbb package."""
+import requests
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+
+from nbb.config import get_stop_infos
 
 # TODO use ratp dataset
 KNOWN_LINES = {"C01561": "9", "C01567": "91.06"}
@@ -81,7 +85,7 @@ class NextPass:
 
         return self.time - datetime.now(tz=self.time.tzinfo)
 
-    def as_str(self, compact: bool = False, pretty: bool = True) -> str:
+    def as_str(self, compact: bool = False, pretty: bool = True, padding=4) -> str:
         """Returns a pretty string representation of the next pass."""
 
         if compact:
@@ -90,14 +94,13 @@ class NextPass:
             )
             time_str = self.time.astimezone().strftime("%H:%M")
         else:
-            time_str = (
-                f"{self.delta_time.seconds // 60:>2} ({self.time.strftime('%H:%M')})"
-            )
+            time_str = f"{self.delta_time.seconds // 60:>2}min. ({self.time.strftime('%H:%M')})"
             destination = self.destination
 
         if pretty:
-            bus_pretty_name = "".join([NUM2EMOJI.get(i, "") for i in self.line_name])
-            return f"⏰ {time_str} {bus_pretty_name: <10} 🚍▶ {destination}"
+            # bus_pretty_name = "".join([NUM2EMOJI.get(i, "") for i in self.line_name])
+            # return f"⏰ {time_str} {bus_pretty_name: <{padding}} 🚍▶ {destination}"
+            return f"{time_str} 🚍 ▶ {destination} [{self.line_name}]"
 
         return f"{time_str} {self.line_name} [{destination}]"
 
@@ -105,17 +108,56 @@ class NextPass:
         return self.time <= other.time
 
 
-def get_message(conf, stop_name, simple=False, compact=False):
+# curl -X 'GET'
+# 'https://prim.iledefrance-mobilites.fr/marketplace/stop-monitoring?MonitoringRef=STIF%3AStopArea%3ASP%3A420704%3A'
+# -H 'accept: application/json'
+# -H  'apikey: HjdLNrITbnGeVPpXSoPrwA0n3gQ6K02W' | jq
+
+BASE_URL = "https://prim.iledefrance-mobilites.fr/marketplace/"
+DEFAULT_API_KEY = "HjdLNrITbnGeVPpXSoPrwA0n3gQ6K02W"
+
+
+def get_raw_data(stop_id):
+    """Get raw data from API and return it as a json object."""
+    response = requests.get(
+        BASE_URL
+        + "stop-monitoring?MonitoringRef="
+        + f"STIF:StopArea:SP:{stop_id}:".replace(":", "%3A"),
+        headers={"apikey": DEFAULT_API_KEY, "accept": "application/json"},
+    )
+    return response.json()
+
+
+def get_next_passes(stop_id):
+    """Get next passes from API and return it as a list of NextPass objects."""
+    raw_data = get_raw_data(stop_id)
+    next_passes = []
+    monit_list = raw_data
+    for f in [
+        "Siri",
+        "ServiceDelivery",
+        "StopMonitoringDelivery",
+        0,
+        "MonitoredStopVisit",
+    ]:
+        monit_list = monit_list[f]
+
+    for monitored in monit_list:
+        next_passes.append(NextPass.from_v2(monitored))
+    return next_passes
+
+
+def get_message(conf, stop_name, simple=False, compact=False, padding=5):
     """Returns a message from a list of NextPass objects."""
 
-    stop_name, stop_code, filters = get_stop_infos(stop_name)
-    next_passes = get_next_passes(conf, stop_name)
+    stop_full_name, stop_code, filters = get_stop_infos(conf, stop_name)
+    next_passes = get_next_passes(stop_code)
     if not next_passes:
         return "No bus found"
 
     # Remove past buses
     for i, n in enumerate(next_passes):
-        if n.time < datetime.datetime.now().astimezone():
+        if n.time < datetime.now().astimezone():
             n.is_valid = False
     # Filter by direction
     if filters:
@@ -124,10 +166,12 @@ def get_message(conf, stop_name, simple=False, compact=False):
                 n.is_valid = False
 
     message = (
-        f"Next buses at {stop_name} planned at "
-        f"{datetime.datetime.now().astimezone().strftime('%H:%M')}"
+        f"Next buses at {stop_full_name} "
+        f"({datetime.now().astimezone().strftime('%H:%M')})\n"
     )
     message += "\n".join(
-        n.as_str(compact, pretty=not simple) for n in next_passes if n.is_valid
+        n.as_str(compact, pretty=not simple, padding=padding)
+        for n in next_passes
+        if n.is_valid
     )
     return message
