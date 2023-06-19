@@ -69,14 +69,27 @@ class NextPass:
         # Or dowload the full dataset from IDFM.
         line_id = _get_value_id(journey, "LineRef")[-1]
         line_name = KNOWN_LINES.get(line_id, line_id)
-        time = None
+
+        # Find the time string and parse it.
+        time_str = None
         for k in ["ExpectedArrivalTime", "ExpectedDepartureTime", "AimedDepartureTime"]:
             try:
-                time = datetime.fromisoformat(call[k])
+                time_str = call[k]
             except KeyError:
                 continue
-        if time is None:
+            else:
+                break
+        if time_str is None:
             raise KeyError("No time found in the data.")
+        try:
+            time = datetime.fromisoformat(time_str)
+        except ValueError as e:
+            # The Z at the end of the time string is not supported by fromisoformat
+            # until 3.11
+            if time_str[-1] == "Z":
+                time = datetime.fromisoformat(time_str[:-1])
+            else:
+                raise e
 
         return cls(
             destination=journey["DestinationName"][0]["value"],
