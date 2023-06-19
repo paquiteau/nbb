@@ -69,9 +69,18 @@ class NextPass:
         # Or dowload the full dataset from IDFM.
         line_id = _get_value_id(journey, "LineRef")[-1]
         line_name = KNOWN_LINES.get(line_id, line_id)
+        time = None
+        for k in ["ExpectedArrivalTime", "ExpectedDepartureTime", "AimedDepartureTime"]:
+            try:
+                time = datetime.fromisoformat(call[k])
+            except KeyError:
+                continue
+        if time is None:
+            raise KeyError("No time found in the data.")
+
         return cls(
             destination=journey["DestinationName"][0]["value"],
-            time=datetime.fromisoformat(call["ExpectedArrivalTime"]).astimezone(),
+            time=time.astimezone(),
             arrival_status=call["ArrivalStatus"],
             stop_area_name=stop_area_name,
             stop_area_id=stop_area_id,
@@ -96,7 +105,7 @@ class NextPass:
         else:
             time_str = (
                 f"{self.delta_time.seconds // 60:>2}min."
-                "({self.time.strftime('%H:%M')})"
+                f"({self.time.strftime('%H:%M')})"
             )
             destination = self.destination
 
@@ -146,7 +155,10 @@ def get_next_passes(stop_id):
         monit_list = monit_list[f]
 
     for monitored in monit_list:
-        next_passes.append(NextPass.from_v2(monitored))
+        try:
+            next_passes.append(NextPass.from_v2(monitored))
+        except KeyError:
+            print(monitored)
     return next_passes
 
 
