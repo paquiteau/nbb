@@ -4,8 +4,10 @@ try:
     import tomllib as toml
 except ImportError:
     import tomli as toml
-
-from importlib.resources import files
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 import unicodedata
 
