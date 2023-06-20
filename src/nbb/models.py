@@ -92,7 +92,7 @@ class NextPass:
         )
 
     def as_str(
-        self, now_ref: datetime.datetime, compact: bool = False, pretty: bool = True
+        self, now_ref: datetime, compact: bool = False, pretty: bool = True
     ) -> str:
         """Returns a pretty string representation of the next pass."""
 
@@ -130,7 +130,6 @@ def parse_timestamp(s: str):
             t = datetime.fromisoformat(s[:-1])
         else:
             raise e
-    print(s, t)
     return t
 
 
@@ -184,15 +183,14 @@ def get_message(conf, stop_name, simple=False, compact=False):
 
     stop_full_name, stop_code, filters = get_stop_infos(conf, stop_name)
     next_passes, time_stamp = get_next_passes(stop_code)
-    print("parsed time_stamp", time_stamp)
     next_passes = sorted(next_passes)
     if not next_passes:
         return "No bus found"
 
-    # # Remove past buses
-    # for i, n in enumerate(next_passes):
-    #     if n.time < time_stamp:
-    #         n.is_valid = False
+    # Remove past buses
+    for i, n in enumerate(next_passes):
+        if n.time < time_stamp:
+            n.is_valid = False
     # Filter by direction
     if filters and conf["cli"]["nofilter"] is False:
         for i, n in enumerate(next_passes):
