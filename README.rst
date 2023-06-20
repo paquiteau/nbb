@@ -2,9 +2,9 @@
 Next Bus Bot
 ===============
 
-A bot/ cli tool that simply gives you the waiting times for next buses at your favorite bus stop.
+A bot/cli tool that simply gives you the waiting times for next buses at your favorite bus stop.
 
-It works only for the IDFM/RATP Network, relying on the api ``lines/v4``. For now only a handfull of bus stops on the Plateau de Saclay are registered, but you can add your own
+It works only for the IDFM/RATP Network, relying on the api ``lines/v4``. For now only a handful of bus stops on the Plateau de Saclay are registered, but you can add your own.
 
 
 .. warning::
