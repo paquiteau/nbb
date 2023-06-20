@@ -81,19 +81,9 @@ class NextPass:
                 break
         if time_str is None:
             raise KeyError("No time found in the data.")
-        try:
-            time = datetime.fromisoformat(time_str)
-        except ValueError as e:
-            # The Z at the end of the time string is not supported by fromisoformat
-            # until 3.11
-            if time_str[-1] == "Z":
-                time = datetime.fromisoformat(time_str[:-1])
-            else:
-                raise e
-
         return cls(
             destination=journey["DestinationName"][0]["value"],
-            time=time.astimezone(),
+            time=parse_timestamp(time_str),
             arrival_status=call["ArrivalStatus"],
             stop_area_name=stop_area_name,
             stop_area_id=stop_area_id,
@@ -101,23 +91,19 @@ class NextPass:
             line_name=line_name,
         )
 
-    @property
-    def delta_time(self) -> timedelta:
-        """Returns the time difference between now and the next pass."""
-
-        return self.time - datetime.now(tz=self.time.tzinfo)
-
-    def as_str(self, compact: bool = False, pretty: bool = True) -> str:
+    def as_str(
+        self, now_ref: datetime.datetime, compact: bool = False, pretty: bool = True
+    ) -> str:
         """Returns a pretty string representation of the next pass."""
 
         if compact:
             destination = "".join(
                 [i for i in self.destination if i.isnumeric() or i.isupper()]
             )
-            time_str = self.time.astimezone().strftime("%H:%M")
+            time_str = self.time.strftime("%H:%M")
         else:
             time_str = (
-                f"{self.delta_time.seconds // 60:>2}min."
+                f"{(self.time - now_ref).seconds // 60:>2}min."
                 f"({self.time.strftime('%H:%M')})"
             )
             destination = self.destination
@@ -131,6 +117,21 @@ class NextPass:
 
     def __lt__(self, other):
         return self.time < other.time
+
+
+def parse_timestamp(s: str):
+    """Parse a timestamp from a string."""
+    try:
+        t = datetime.fromisoformat(s)
+    except ValueError as e:
+        # The Z at the end of the time string is not supported by fromisoformat
+        # until 3.11
+        if s[-1] == "Z":
+            t = datetime.fromisoformat(s[:-1])
+        else:
+            raise e
+    print(s, t)
+    return t
 
 
 # curl -X 'GET'
@@ -172,33 +173,36 @@ def get_next_passes(stop_id):
             next_passes.append(NextPass.from_v2(monitored))
         except KeyError:
             print(monitored)
-    return next_passes
+    timestamp = parse_timestamp(
+        raw_data["Siri"]["ServiceDelivery"]["ResponseTimestamp"]
+    )
+    return next_passes, timestamp
 
 
 def get_message(conf, stop_name, simple=False, compact=False):
     """Returns a message from a list of NextPass objects."""
 
     stop_full_name, stop_code, filters = get_stop_infos(conf, stop_name)
-    next_passes = get_next_passes(stop_code)
+    next_passes, time_stamp = get_next_passes(stop_code)
+    print("parsed time_stamp", time_stamp)
     next_passes = sorted(next_passes)
     if not next_passes:
         return "No bus found"
 
-    # Remove past buses
-    for i, n in enumerate(next_passes):
-        if n.time < datetime.now().astimezone():
-            n.is_valid = False
+    # # Remove past buses
+    # for i, n in enumerate(next_passes):
+    #     if n.time < time_stamp:
+    #         n.is_valid = False
     # Filter by direction
     if filters and conf["cli"]["nofilter"] is False:
         for i, n in enumerate(next_passes):
             if n.destination not in filters:
                 n.is_valid = False
 
-    message = (
-        f"Next buses at {stop_full_name} "
-        f"({datetime.now().astimezone().strftime('%H:%M')})\n"
-    )
+    message = f"Next buses at {stop_full_name} " f"({time_stamp.strftime('%H:%M')})\n"
     message += "\n".join(
-        n.as_str(compact, pretty=not simple) for n in next_passes if n.is_valid
+        n.as_str(time_stamp, compact, pretty=not simple)
+        for n in next_passes
+        if n.is_valid
     )
     return message
