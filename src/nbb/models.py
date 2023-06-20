@@ -107,7 +107,7 @@ class NextPass:
 
         return self.time - datetime.now(tz=self.time.tzinfo)
 
-    def as_str(self, compact: bool = False, pretty: bool = True, padding=4) -> str:
+    def as_str(self, compact: bool = False, pretty: bool = True) -> str:
         """Returns a pretty string representation of the next pass."""
 
         if compact:
@@ -175,7 +175,7 @@ def get_next_passes(stop_id):
     return next_passes
 
 
-def get_message(conf, stop_name, simple=False, compact=False, padding=5):
+def get_message(conf, stop_name, simple=False, compact=False):
     """Returns a message from a list of NextPass objects."""
 
     stop_full_name, stop_code, filters = get_stop_infos(conf, stop_name)
@@ -198,8 +198,6 @@ def get_message(conf, stop_name, simple=False, compact=False, padding=5):
         f"({datetime.now().astimezone().strftime('%H:%M')})\n"
     )
     message += "\n".join(
-        n.as_str(compact, pretty=not simple, padding=padding)
-        for n in next_passes
-        if n.is_valid
+        n.as_str(compact, pretty=not simple) for n in next_passes if n.is_valid
     )
     return message
