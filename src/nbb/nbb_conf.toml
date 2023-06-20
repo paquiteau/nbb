@@ -6,6 +6,7 @@
 pretty = true
 compact = true
 verbose = false
+nofilter = false
 
 [stop.places]
 

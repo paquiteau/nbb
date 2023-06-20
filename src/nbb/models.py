@@ -189,7 +189,7 @@ def get_message(conf, stop_name, simple=False, compact=False):
         if n.time < datetime.now().astimezone():
             n.is_valid = False
     # Filter by direction
-    if filters:
+    if filters and conf["cli"]["nofilter"] is False:
         for i, n in enumerate(next_passes):
             if n.destination not in filters:
                 n.is_valid = False

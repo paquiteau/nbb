@@ -17,6 +17,7 @@ def parser():
     parser.add_argument("--simple", action="store_true")
     parser.add_argument("--compact", action="store_true")
     parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--nofilter", action="store_true")
     parser.add_argument("stop_name", nargs="?", default=None)
     ns = parser.parse_args()
     if ns.verbose:
@@ -31,6 +32,8 @@ def main():
         print("loading config")
 
     conf = get_config(ns.config)
+    if ns.nofilter:
+        conf["cli"]["nofilter"] = True
     # Get the default stop as the first one registered:
     print(get_message(conf, ns.stop_name, ns.simple, ns.compact))
 
