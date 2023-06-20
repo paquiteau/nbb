@@ -129,8 +129,8 @@ class NextPass:
 
         return f"{time_str} {self.line_name} [{destination}]"
 
-    def __le__(self, other):
-        return self.time <= other.time
+    def __lt__(self, other):
+        return self.time < other.time
 
 
 # curl -X 'GET'
@@ -180,6 +180,7 @@ def get_message(conf, stop_name, simple=False, compact=False):
 
     stop_full_name, stop_code, filters = get_stop_infos(conf, stop_name)
     next_passes = get_next_passes(stop_code)
+    next_passes = sorted(next_passes)
     if not next_passes:
         return "No bus found"
 
