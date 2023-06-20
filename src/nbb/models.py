@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from nbb.config import get_stop_infos
 
 # TODO use ratp dataset
-KNOWN_LINES = {"C01561": "9", "C01567": "91.06"}
+KNOWN_LINES = {"C01561": "9", "C00490": "10", "C01567": "91-06", "C01571": "91-10"}
 
 NUM2EMOJI = {
     "0": "0️⃣ ",
