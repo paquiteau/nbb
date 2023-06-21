@@ -66,7 +66,7 @@ class NextPass:
         stop_area_id = _get_value_id(data, "MonitoringRef")
         stop_area_name = call["StopPointName"][0]["value"]
         # TODO Save the mapping stop_area_id -> stop_area_name
-        # Or dowload the full dataset from IDFM.
+        # Or download the full dataset from IDFM.
         line_id = _get_value_id(journey, "LineRef")[-1]
         line_name = KNOWN_LINES.get(line_id, line_id)
 
